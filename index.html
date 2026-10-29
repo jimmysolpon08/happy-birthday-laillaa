@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Happy Birthday! ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="mobile-container" id="stage">
+    <!-- Base Background Layer: bg1 -->
+    <div class="bg-layer base-bg" id="baseBg"></div>
+
+    <!-- Cinematic Spawn Overlay Layer: Usagi & Pompompurin -->
+    <div class="overlay-layer" id="overlayLayer">
+      <img src="Usagi and Pompompurin ദ്ദി ˉ͈̀꒳ˉ͈́ ).jpeg"
+        onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=encodeURI('Usagi and Pompompurin ദ്ദി ˉ͈̀꒳ˉ͈́ ).jpeg');}"
+        alt="Usagi and Pompompurin" id="overlayImage" class="overlay-image">
+      <!-- Hardware-accelerated light flare -->
+      <div class="spawn-glow" id="spawnGlow"></div>
+    </div>
+
+    <!-- Seamless Panoramic Flow: 4-Season Diagonal Morph & AI Matching Background -->
+    <div class="collage-container panoramic-flow" id="collageContainer">
+      <!-- 1. AI-Style Ambient Background Mesh (Seamlessly Fills Entire Screen) -->
+      <div class="panoramic-ambient-mesh" id="ambientMesh"></div>
+      <!-- 1b. Seamless Master Underlay (Guarantees 100% Edge-to-Edge Coverage, Zero Empty Space) -->
+      <div class="panoramic-master-underlay" id="masterUnderlay"></div>
+
+      <!-- 2. Four Seamless Diagonal Flow Panels (Full Uncropped Characters) -->
+      <!-- Panel 1: Autumn Maple Forest - Pompompurin in Cozy Scarf (Top-Left) -->
+      <div class="panoramic-panel panel-autumn" id="panelAutumn" data-name="Pompompurin Autumn">
+        <div class="panel-img-wrapper">
+          <img src="929219335643569743.jpeg" alt="Autumn Pompompurin" class="panoramic-img img-autumn">
+          <div class="panel-shimmer"></div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Jacaranda Blossom Avenue - Usagi with Plushies (Top-Right) -->
+      <div class="panoramic-panel panel-jacaranda" id="panelJacaranda" data-name="Usagi Jacaranda Bloom">
+        <div class="panel-img-wrapper">
+          <img src="_.jpeg" alt="Jacaranda Bloom Usagi" class="panoramic-img img-jacaranda">
+          <div class="panel-shimmer"></div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Golden Sunset Beach - Smiling Usagi (Bottom-Left) -->
+      <div class="panoramic-panel panel-beach" id="panelBeach" data-name="Usagi Sunset Beach">
+        <div class="panel-img-wrapper">
+          <img src="_ (1).jpeg"
+            onerror="if(!this.dataset.tried){this.dataset.tried='1'; this.src=encodeURI('_ (1).jpeg');}"
+            alt="Sunset Beach Usagi" class="panoramic-img img-beach">
+          <div class="panel-shimmer"></div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Spring Sakura Lake - Sleeping Pompompurin (Bottom-Right) -->
+      <div class="panoramic-panel panel-lake" id="panelLake" data-name="Pompompurin Spring Lake">
+        <div class="panel-img-wrapper">
+          <img src="yboom.jpeg" alt="Spring Lake Pompompurin" class="panoramic-img img-lake">
+          <div class="panel-shimmer"></div>
+        </div>
+      </div>
+
+      <!-- 3. Diagonal Ambient Light Flares (Eliminates All Hard Boundaries) -->
+      <div class="diagonal-light-flare flare-center"></div>
+      <div class="diagonal-light-flare flare-diagonal-1"></div>
+      <div class="diagonal-light-flare flare-diagonal-2"></div>
+
+      <!-- 4. Unified Atmospheric Color-Grade & Soft Cinematic Vignette -->
+      <div class="panoramic-color-grade"></div>
+      <div class="panoramic-vignette"></div>
+
+      <!-- 5. Floating Seasonal Petals, Autumn Leaves & Golden Sparkles -->
+      <div class="seasonal-petals-layer" id="seasonalPetals"></div>
+
+    </div>
+
+    <!-- Floating Ambient Sparkles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Background Audio: plays from start until countdown video begins -->
+    <audio id="bgAudio" src="audio/audio1.mp3" preload="auto" loop></audio>
+
+    <!-- ================================================
+         VIDEO SCENE: Auto-plays after collage, with
+         5-second countdown as characters arrive one by one
+         ================================================ -->
+    <div class="video-scene" id="videoScene">
+      <!-- Cute animated background hearts/stars behind video -->
+      <div class="video-bg-hearts" id="videoBgHearts"></div>
+
+      <!-- The main video -->
+      <video id="birthdayVideo" class="birthday-video" src="5sec countdown/pomvid.mp4" playsinline muted
+        preload="auto"></video>
+
+      <!-- Countdown number overlay -->
+      <div class="countdown-overlay" id="countdownOverlay">
+        <span class="countdown-number" id="countdownNumber"></span>
+      </div>
+
+      <!-- Gift sparkle burst per character arrival -->
+      <div class="character-arrival-burst" id="arrivalBurst"></div>
+
+      <!-- Happy Birthday message (10-12s overlay, no background) -->
+      <div class="birthday-message-overlay" id="birthdayMessageOverlay">
+        <div class="bday-text-overlay">Happy Birthday Love 💖</div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,957 @@
+/* ===================================================
+   90 FPS SMOOTH MOBILE BIRTHDAY EXPERIENCE
+   - Hardware Accelerated (GPU Only: transform + opacity)
+   - Zero Janky Filter Blurs
+   - Perfectly Centered Characters
+   - Feathered Mixed Borders (No Straight Cuts)
+   - Harmonized Contrast
+   =================================================== */
+
+:root {
+  --sparkle-color: #ffe685;
+  --bg-dark: #0f0c14;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: manipulation;
+}
+
+/* Mobile Canvas: Native app feel on phone, framed on desktop */
+.mobile-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.85);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Base Background: bg1.jpeg */
+.bg-layer.base-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg1.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  transition: opacity 1.2s ease;
+  will-change: opacity;
+}
+
+.mobile-container.spawned .base-bg {
+  opacity: 0.85;
+}
+
+/* ===================================================
+   FIRST SPAWN: USAGI & POMPOMPURIN
+   Smooth, GPU-accelerated 90fps cinematic fade
+   =================================================== */
+
+.overlay-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.overlay-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.mobile-container.spawned .overlay-layer {
+  opacity: 1;
+  animation: movieFadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes movieFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale3d(1.05, 1.05, 1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+/* Radiant glow burst using pure opacity */
+.spawn-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 245, 210, 0.8) 0%, rgba(255, 215, 120, 0.35) 45%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: opacity, transform;
+}
+
+.mobile-container.spawned .spawn-glow {
+  animation: lightBurstGPU 1.6s ease-out forwards;
+}
+
+@keyframes lightBurstGPU {
+  0% { opacity: 0; transform: scale3d(0.8, 0.8, 1); }
+  35% { opacity: 0.9; transform: scale3d(1.15, 1.15, 1); }
+  100% { opacity: 0; transform: scale3d(1.4, 1.4, 1); }
+}
+
+/* ===================================================
+   SMOOTH PANORAMIC FLOW: 4-SEASON DIAGONAL MORPH
+   - Hardware-Accelerated 90fps Compositing
+   - AI-Style Matching Ambient Background (Zero Blank Voids)
+   - Diagonal Soft Gradient Feathering (No Box Edges)
+   - Full Uncropped Characters (Autumn Purin, Jacaranda Usagi, Beach Usagi, Lake Purin)
+   - Ultra-HD Color Enhancement & Clarity Filters
+   - Multi-Seasonal Petals & Golden Bokeh Sparkles
+   =================================================== */
+
+/* When Collage is Active: Completely Eliminate the Lotus Pond Overlay Underneath */
+.mobile-container.collage-active .overlay-layer,
+.collage-container.panoramic-flow.active ~ .overlay-layer,
+.mobile-container.spawned.collage-active .overlay-layer {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+.collage-container.panoramic-flow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: #110d18;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.collage-container.panoramic-flow.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 1. AI-Style Ambient Background Mesh (Seamlessly Fills Every Pixel) */
+.panoramic-ambient-mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: 
+    /* Top-Left: Warm Autumn Crimson / Amber Glow */
+    radial-gradient(circle at 18% 18%, rgba(215, 75, 42, 0.90) 0%, rgba(180, 50, 30, 0.50) 45%, transparent 70%),
+    /* Top-Right: Twilight Jacaranda Lavender / Purple */
+    radial-gradient(circle at 82% 18%, rgba(145, 105, 230, 0.90) 0%, rgba(100, 75, 190, 0.50) 45%, transparent 70%),
+    /* Bottom-Left: Golden Sunset Beach Gold */
+    radial-gradient(circle at 20% 82%, rgba(245, 175, 55, 0.90) 0%, rgba(210, 130, 40, 0.50) 45%, transparent 70%),
+    /* Bottom-Right: Sakura Spring Lake Rose Pink */
+    radial-gradient(circle at 80% 82%, rgba(235, 125, 170, 0.90) 0%, rgba(190, 85, 140, 0.50) 45%, transparent 70%),
+    /* Center Radiant Sunset Sun Glow */
+    radial-gradient(circle at 50% 50%, rgba(255, 235, 185, 0.55) 0%, rgba(255, 210, 140, 0.25) 40%, transparent 65%),
+    /* Base Harmonized Dusk Atmosphere */
+    linear-gradient(135deg, #2b1115 0%, #1e1329 50%, #101c26 100%);
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+
+/* 1b. Seamless Master Underlay (Smoothly Fades in After All 4 Panels Spawn) */
+.panoramic-master-underlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('blended_hd_masterpiece.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.collage-container.panoramic-flow.all-spawned .panoramic-master-underlay {
+  opacity: 0.95;
+}
+
+/* 2. Four Seamless Flow Panels with Overlapping Diagonal Bounds */
+.panoramic-panel {
+  position: absolute;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0;
+  width: calc(50% + 0.5px);
+  height: calc(50% + 0.5px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  cursor: pointer;
+}
+
+.panel-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Panel Quadrant Placements */
+/* Top-Left: Autumn Pompompurin */
+.panel-autumn {
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+/* Top-Right: Jacaranda Usagi & Friends */
+.panel-jacaranda {
+  top: 0;
+  left: 50%;
+  z-index: 6;
+}
+
+/* Bottom-Left: Sunset Beach Usagi */
+.panel-beach {
+  top: 50%;
+  left: 0;
+  z-index: 7;
+}
+
+/* Bottom-Right: Spring Lake Sleeping Purin */
+.panel-lake {
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+}
+
+/* HD Images: Exact Focal Positioning for 100% Complete, Uncropped Characters */
+.panoramic-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+  /* Ultra-HD Clarity & Vibrance */
+  filter: contrast(1.06) saturate(1.16) brightness(1.02);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+  will-change: transform, filter;
+}
+
+.img-autumn {
+  object-position: center;
+}
+
+.img-jacaranda {
+  object-position: center;
+}
+
+.img-beach {
+  object-position: center;
+}
+
+.img-lake {
+  object-position: center;
+}
+
+/* Interactive Character Tap Reaction */
+.panoramic-panel:active .panoramic-img,
+.panoramic-panel.tapped .panoramic-img {
+  transform: scale(1.06);
+  filter: contrast(1.12) saturate(1.25) brightness(1.06);
+}
+
+/* Arrival Soft Shimmer */
+.panel-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 235, 180, 0.2) 50%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.panoramic-panel.spawned .panel-shimmer {
+  animation: panelShimmerBurst 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes panelShimmerBurst {
+  0% { opacity: 0.95; transform: scale(1.08); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* Staggered Smooth Entrance Animations */
+.panel-autumn.spawned {
+  animation: panelSpawnTL 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.panel-jacaranda.spawned {
+  animation: panelSpawnTR 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.panel-beach.spawned {
+  animation: panelSpawnBL 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.panel-lake.spawned {
+  animation: panelSpawnBR 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes panelSpawnTL {
+  0% {
+    opacity: 0;
+    transform: translate3d(-18px, -18px, 0) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(2px, 2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes panelSpawnTR {
+  0% {
+    opacity: 0;
+    transform: translate3d(18px, -18px, 0) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(-2px, 2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes panelSpawnBL {
+  0% {
+    opacity: 0;
+    transform: translate3d(-18px, 18px, 0) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(2px, -2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes panelSpawnBR {
+  0% {
+    opacity: 0;
+    transform: translate3d(18px, 18px, 0) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(-2px, -2px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 3. Ambient Diagonal Light Flares (Eliminates All Boundary Seams) */
+.diagonal-light-flare {
+  position: absolute;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.diagonal-light-flare.flare-center {
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate3d(-50%, -50%, 0) scale(0.85);
+  background: radial-gradient(circle, 
+    rgba(255, 245, 215, 0.85) 0%, 
+    rgba(255, 215, 140, 0.45) 40%, 
+    rgba(255, 190, 110, 0.20) 60%, 
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+  z-index: 12;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collage-container.panoramic-flow.all-spawned .flare-center {
+  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  animation: flareBreathe 5s ease-in-out infinite alternate;
+}
+
+@keyframes flareBreathe {
+  0% {
+    transform: translate3d(-50%, -50%, 0) scale(0.94);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scale(1.12);
+    opacity: 1;
+  }
+}
+
+.diagonal-light-flare.flare-diagonal-1 {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    transparent 45%, 
+    rgba(255, 235, 185, 0.22) 50%, 
+    transparent 55%
+  );
+  mix-blend-mode: screen;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.diagonal-light-flare.flare-diagonal-2 {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, 
+    transparent 45%, 
+    rgba(255, 220, 195, 0.22) 50%, 
+    transparent 55%
+  );
+  mix-blend-mode: screen;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.collage-container.panoramic-flow.all-spawned .flare-diagonal-1,
+.collage-container.panoramic-flow.all-spawned .flare-diagonal-2 {
+  opacity: 1;
+}
+
+/* 4. Unified Photographic Color Grade & Cinematic Vignette */
+.panoramic-color-grade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    rgba(255, 200, 150, 0.14) 0%, 
+    rgba(225, 185, 245, 0.08) 50%, 
+    rgba(255, 215, 160, 0.16) 100%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 14;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.panoramic-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(15, 10, 22, 0.55) 100%);
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.collage-container.panoramic-flow.all-spawned .panoramic-color-grade,
+.collage-container.panoramic-flow.all-spawned .panoramic-vignette {
+  opacity: 1;
+}
+
+/* 5. Multi-Seasonal Ambient Floating Petals & Sparkles */
+.seasonal-petals-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.seasonal-particle {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* Autumn Maple Leaf (Falling from Top-Left) */
+.particle-autumn-leaf {
+  width: 9px;
+  height: 9px;
+  background: radial-gradient(circle, #ff6b35 0%, #d83a15 100%);
+  border-radius: 2px 8px 2px 8px;
+  box-shadow: 0 0 5px rgba(255, 100, 50, 0.6);
+  animation-name: fallAutumnLeaf;
+}
+
+@keyframes fallAutumnLeaf {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) rotate(0deg);
+  }
+  20% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.75;
+    transform: translate3d(24px, 85px, 0) rotate(160deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(36px, 130px, 0) rotate(240deg);
+  }
+}
+
+/* Jacaranda Petal (Floating from Top-Right) */
+.particle-jacaranda-petal {
+  width: 8px;
+  height: 6px;
+  background: radial-gradient(circle, #c4a1ff 0%, #9065e8 100%);
+  border-radius: 50% 50% 50% 20%;
+  box-shadow: 0 0 6px rgba(180, 135, 255, 0.6);
+  animation-name: floatJacarandaPetal;
+}
+
+@keyframes floatJacarandaPetal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) rotate(0deg);
+  }
+  25% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.7;
+    transform: translate3d(-20px, 75px, 0) rotate(-140deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-32px, 120px, 0) rotate(-220deg);
+  }
+}
+
+/* Sakura Petal (Drifting near Lake) */
+.particle-sakura-petal {
+  width: 7px;
+  height: 6px;
+  background: radial-gradient(circle, #ffbcd9 0%, #f687b3 100%);
+  border-radius: 50% 50% 50% 10%;
+  box-shadow: 0 0 5px rgba(255, 180, 210, 0.6);
+  animation-name: floatSakuraPetal;
+}
+
+@keyframes floatSakuraPetal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 15px, 0) rotate(0deg);
+  }
+  30% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.65;
+    transform: translate3d(-18px, -65px, 0) rotate(120deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-26px, -100px, 0) rotate(190deg);
+  }
+}
+
+/* Golden Sunset Sparkle Bokeh */
+.particle-golden-sparkle {
+  border-radius: 50%;
+  background: #fff6d6;
+  box-shadow: 0 0 6px #fff, 0 0 12px #ffd700;
+  animation-name: pulseGoldSparkle;
+}
+
+@keyframes pulseGoldSparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+
+/* Floating Ambient Sparkles (Base Particles) */
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: var(--sparkle-color);
+  border-radius: 50%;
+  box-shadow: 0 0 6px #fff, 0 0 10px var(--sparkle-color);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: floatUp 3.8s ease-in infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale3d(0.5, 0.5, 1);
+  }
+  30% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.6;
+    transform: translate3d(0, -70px, 0) scale3d(1.1, 1.1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -110px, 0) scale3d(0.3, 0.3, 1);
+  }
+}
+
+/* ===================================================
+   VIDEO SCENE — Post-Collage Cute Birthday Countdown
+   =================================================== */
+
+.video-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a0a1e;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+  overflow: hidden;
+}
+
+.video-scene.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The Video */
+.birthday-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  z-index: 1;
+}
+
+/* Animated floating hearts behind video */
+.video-bg-hearts {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Soft pink vignette over video */
+.video-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(60, 0, 40, 0.55) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Countdown overlay */
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.countdown-number {
+  font-family: 'Pacifico', 'Dancing Script', cursive;
+  font-size: clamp(90px, 30vw, 160px);
+  color: #ff80b0;
+  text-shadow:
+    0 0 20px rgba(255, 100, 160, 0.9),
+    0 0 50px rgba(255, 60, 130, 0.6),
+    0 0 90px rgba(255, 100, 180, 0.35),
+    3px 3px 0px #c9005a,
+    -1px -1px 0px #ff4090;
+  opacity: 0;
+  display: inline-block;
+  transform: scale(0.4) rotate(-12deg);
+  will-change: opacity, transform;
+  transition: none;
+  letter-spacing: 2px;
+  /* shimmer */
+  background: linear-gradient(135deg, #ffb3d0 0%, #ff4d9a 40%, #ffb3d0 70%, #ff80b0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(255, 80, 150, 0.85)) drop-shadow(0 0 38px rgba(255, 40, 100, 0.5));
+}
+
+.countdown-number.pop-in {
+  animation: countdownPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.countdown-number.pop-out {
+  animation: countdownFade 0.18s ease-in forwards;
+}
+
+@keyframes countdownPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-15deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.18) rotate(4deg);
+  }
+  80% {
+    transform: scale(0.94) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes countdownFade {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4) rotate(8deg);
+  }
+}
+
+/* Character arrival burst */
+.character-arrival-burst {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.burst-heart {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0;
+  animation: burstHeart 1.2s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes burstHeart {
+  0% {
+    opacity: 0;
+    transform: scale(0) translateY(0);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.3) translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) translateY(-80px) rotate(20deg);
+  }
+}
+
+/* Cracker & Party Popper celebration particles */
+.cracker-particle {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: crackerExplode var(--dur, 0.9s) ease-out forwards;
+  z-index: 20;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255,220,50,0.9));
+}
+
+@keyframes crackerExplode {
+  0% {
+    opacity: 1;
+    transform: scale(0.3) translate(0, 0) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.4) translate(calc(var(--tx, 60px) * 0.3), calc(var(--ty, -60px) * 0.3)) rotate(120deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translate(var(--tx, 60px), var(--ty, -60px)) rotate(360deg);
+  }
+}
+
+/* Birthday message: transparent overlay directly on video */
+.birthday-message-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.birthday-message-overlay.show {
+  opacity: 1;
+}
+
+/* Pure text overlay — no background box */
+.bday-text-overlay {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  font-size: clamp(28px, 9vw, 52px);
+  color: #ff6eb4;
+  text-align: center;
+  text-shadow:
+    0 0 16px rgba(255, 80, 170, 0.9),
+    0 0 40px rgba(255, 60, 140, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  animation: bdayPulse 1.4s ease-in-out infinite;
+  line-height: 1.3;
+}
+
+@keyframes bdayPulse {
+  0%, 100% { transform: scale(1); text-shadow: 0 0 16px rgba(255,80,170,0.9), 0 0 40px rgba(255,60,140,0.6); }
+  50%       { transform: scale(1.06); text-shadow: 0 0 28px rgba(255,80,180,1), 0 0 60px rgba(255,60,150,0.8); }
+}
+
+/* Floating celebration words (14-17s) */
+.floating-word {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 700;
+  z-index: 18;
+  opacity: 0;
+  white-space: nowrap;
+  animation: floatWord var(--fdur, 2.2s) ease-out forwards;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.22);
+  will-change: transform, opacity;
+}
+
+@keyframes floatWord {
+  0%   { opacity: 0;   transform: translateY(8px)  scale(0.65) rotate(-4deg); }
+  18%  { opacity: 1;   transform: translateY(-4px) scale(1.15) rotate(2deg);  }
+  65%  { opacity: 0.9; transform: translateY(var(--fdy, -30px)) scale(1) rotate(-1deg); }
+  100% { opacity: 0;   transform: translateY(calc(var(--fdy, -30px) - 20px)) scale(0.85) rotate(3deg); }
+}
+
+/* Floating heart particle (video bg) */
+.vid-heart {
+  position: absolute;
+  font-size: 18px;
+  opacity: 0;
+  pointer-events: none;
+  animation: heartFloat var(--dur, 4s) ease-in-out var(--del, 0s) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes heartFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.7) rotate(-5deg);
+  }
+  20% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.5;
+    transform: translateY(-120px) scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-160px) scale(0.5) rotate(15deg);
+  }
+}
